@@ -8,8 +8,11 @@
     <ul>
       <% for (let i in urls) {%>
         <li><%= i + ": " + urls[i]%></li>
+        <form method="POST" action="/urls/<%= i %>/delete">
+          <input type="submit" value="Delete">
+        </form>
       <% }; %>
     </ul>
-    <a href="url">Tiny-ize me!</a>
+    <a href="/urls/new">Tiny-ize me!</a>
 </body>
 </html>

@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
-<body>
-  <% include ./partials/_header %>
-  shortURL + ": " + longURL
 
-</body>
+<head>
+ <title>TinyApp</title>
+</head>
+
+<header>
+   <% include ./partials/_header %>
+</header>
+
+ <body>
+   <div>
+       <h1>Individual URLs</h1>
+       <p></p>
+       <ul>
+       <li><%= shortURL + ":  " + longURL%></li>
+       </ul>
+   </div>
+ </body>
+
 </html>
