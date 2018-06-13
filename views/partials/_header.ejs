@@ -1,2 +1,19 @@
 <h1>Header</h1>
-<a href="/urls">Back to url_index</a>
+<div>
+  <a href="/urls">Back to url_index</a>
+</div>
+
+<div>
+  <% if (username === undefined) { %>
+    <form method="POST" action="/login">
+      <p>Username:</p>
+      <input type="text" name="username" >
+      <input type="submit" name="Sign In" value="Sign In">
+    </form>
+    <% } else { %>
+    <form method="POST" action="/logout">
+      <input type="submit" name="Log Out" value="Log Out">
+    </form>
+    <% }; %>
+  <p><%= username %></p>
+</div>
