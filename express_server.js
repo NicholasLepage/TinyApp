@@ -16,6 +16,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+};
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
@@ -30,18 +43,48 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   let templateVars = { urls: urlDatabase,
-                        username: req.cookies["username"]
+                        userObject: JSON.stringify(users[req.cookies["user_id"]])
                       };
   res.render("urls_index", templateVars);
 });
 
+app.get("/register", (req, res) => {
+  let templateVars = { userObject: JSON.stringify(users[req.cookies["user_id"]]) };
+  res.render("urls_register", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  console.log(req.body);
+  if (req.body.email === '' || req.body.password === '') {
+    res.sendStatus(400);
+  } else if (req.body.email === 234) {
+    res.sendStatus(400); //COME BACK TO THIS !!!!!!!!!!!!!!!!!!11
+  } else {
+    req.body.id = generateRandomString();
+    users[req.body.id] = req.body;
+    console.log(users);
+    res.cookie("user_id", req.body.id);
+    res.redirect("/urls");
+  }
+});
+
+app.get("/login", (req, res) => {
+  let templateVars = { userObject: JSON.stringify(users[req.cookies["user_id"]]) };
+  res.render("urls_login", templateVars);
+});
+
 app.post("/login", (req,res) => {
-  res.cookie("username", req.body.username);
-  res.redirect("/urls");
+  for (var user in users) {
+    console.log(users[user].email);
+    if (users[user].email === req.body.email && users[user].password === req.body.password) {
+      res.cookie("user_id", users[user].id);
+      res.redirect("/urls");
+    }
+  }
 });
 
 app.post("/logout", (req,res) => {
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -51,7 +94,7 @@ app.post("/urls/:id/delete", (req,res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { username: req.cookies["username"] };
+  let templateVars = { userObject: JSON.stringify(users[req.cookies["user_id"]]) };
   res.render("urls_new", templateVars);
 });
 
@@ -64,7 +107,7 @@ app.post("/urls/:id", (req,res) => {
 app.get("/urls/:id", (req, res) => {
   let templateVars = { shortURL: req.params.id,
                         longURL: urlDatabase[req.params.id],
-                        username: req.cookies["username"]
+                        userObject: JSON.stringify(users[req.cookies["user_id"]])
                        };
   res.render("urls_show", templateVars);
 });
@@ -82,7 +125,7 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[longURL]);
 });
 
-function generateRandomString() {
+const generateRandomString = function() {
   var text = "";
   var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -91,6 +134,10 @@ function generateRandomString() {
   }
   return text;
 }
+
+const render400 = res => {
+  res.status(400).render("400");
+};
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
