@@ -94,7 +94,6 @@ app.post("/register", (req, res) => {
   users[req.body.id] = req.body;
   const pass = req.body.password;
   const hashedPass = bcrypt.hashSync(pass, 10);
-  console.log(hashedPass);
   req.session.user_id = req.body.id;   //Creates the cookie "user_id" which will remember who is logged in.
 
   res.redirect("/urls");
