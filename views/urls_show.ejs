@@ -29,7 +29,7 @@
         </div>
         <div>
           <h3>Edit URL</h3>
-          <form method="POST" action="/urls/<%=shortURL%>">
+          <form method="POST" action="/urls/<%=shortURL%>?_method=PUT">
             <input type="text" name="updatedURL">
             <input type="submit" name="submitUpdate" value="Submit">
           </form>

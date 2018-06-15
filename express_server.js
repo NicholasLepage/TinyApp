@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
+const methodOverride = require('method-override');
 
 app.use(cookieSession({
   name: 'session',
@@ -17,6 +18,7 @@ app.use(cookieSession({
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static("views"));
+app.use(methodOverride('_method'));
 
 //Database containing every website created by the users.
 let urlDatabase = {
@@ -124,7 +126,7 @@ app.post("/logout", (req,res) => {
 //Handles the request to delete a particular URL from the UrlDatabase
 //Did not make it impossible to delete if the URL isn't yours,
 //because you don't have access to the button if you're not logged in as the appropriate user.
-app.post("/urls/:id/delete", (req,res) => {
+app.delete("/urls/:id/delete", (req,res) => {
   delete urlDatabase[req.params.id];
   res.redirect("/urls");
 });
@@ -153,7 +155,7 @@ app.post("/urls", (req, res) => {
 //Note: Edit button does not appear on index since you cannot URLs which aren't yours.
 //However, I made sure that you cannot edit any link by brute forcing your way into the edit page
 //by checking the cookies on the actual page. (See urls_show.ejs file)
-app.post("/urls/:id", (req,res) => {
+app.put("/urls/:id", (req,res) => {
   urlDatabase[req.params.id].longURL = req.body.updatedURL;
   res.redirect("/urls");
 });
