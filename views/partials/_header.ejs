@@ -24,7 +24,7 @@
 
         <!-- !!!! This is probably what you want to evaluate !!!! -->
 
-        <% if (userObject === undefined) { %>
+        <% if (userObject === undefined) { %>  <!-- Makes sure the user is logged in -->
         <form action="/login" class="navbar-form navbar-right">
           <input type="submit" class="btn btn-default" value="Sign In">
         </form>
@@ -34,10 +34,10 @@
         </form>
 
         <% } else { %>
-        <form method="POST" action="/logout" class="navbar-form navbar-left">
+        <form method="POST" action="/logout" class="navbar-form navbar-right">
           <input type="submit" class="btn btn-default" value="Log Out">
         </form>
-        <p><%= userObject.email %></p> <!-- Displying only the email as opposed to the    .                                   entire object for security reasons -->
+        <p class="navbar-form navbar-right" style="padding-top:2px; font-size:20px;"><%= userObject.email %></p> <!-- Displying only the email as opposed to the entire object for security reasons -->
         <% }; %>
       </form>
 

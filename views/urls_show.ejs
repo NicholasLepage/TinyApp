@@ -11,25 +11,30 @@
 
 <body>
 
-  <% if ( userObject === undefined || !urls[shortURL]) { %>
-
-    <div>
-      <h3>Please login as the creator of this Tiny-ized URL.</h3>
+  <% if ( userObject === undefined || !urls[shortURL]) { %>     <!-- Checks if the user accessing the URL edit page created it. -->
+  <div class="container text-center">
+    <div class="jumbotron">
+      <div>
+        <h3>Please login as the creator of this Tiny-ized URL.</h3>
+      </div>
     </div>
+  </div>
 
   <% } else { %>
-
-    <div>
-      <h1>Short URL: localhost:8080/u/<%=shortURL%></h1>
-      <p>Shortened URL of: <%= longURL%></p>
-    </div>
-
-    <div>
-      <h3>Edit URL</h3>
-      <form method="POST" action="/urls/<%=shortURL%>">
-        <input type="text" name="updatedURL">
-        <input type="submit" name="submitUpdate" value="Submit">
-      </form>
+    <div class="container text-center">
+      <div class="jumbotron">
+        <div>
+          <h1>Short URL: localhost:8080/u/<%=shortURL%></h1>
+          <p>Shortened URL of: <%= longURL%></p>
+        </div>
+        <div>
+          <h3>Edit URL</h3>
+          <form method="POST" action="/urls/<%=shortURL%>">
+            <input type="text" name="updatedURL">
+            <input type="submit" name="submitUpdate" value="Submit">
+          </form>
+        </div>
+      </div>
     </div>
 
   <% }; %>

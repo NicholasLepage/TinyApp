@@ -11,24 +11,25 @@
 <body>
   <div class="container text-center">
     <div class="jumbotron">
-      <ul>
 
-        <% if (userObject === undefined) { %>
+        <% if (userObject === undefined) { %>     <!-- Makes sure the user is logged in -->
         <h3>Please login or register to start Tiny-izing websites!</h3>
         <% }; %>
 
-        <% for (let i in urls) {%>
-          <li><%= i + ": " + urls[i].longURL%></li>
-          <form method="GET" action="/urls/<%= i %>">
-            <input type="submit" value="Edit">
+        <% for (let i in urls) {%>                <!-- Lists the URLs made by the user, if any. -->
+          <p style="font-size: 20px;"><%= "localhost:8080/u/" + i + ": " + urls[i].longURL%></p>
+
+          <form method="GET" action="/urls/<%= i %>" style="display:inline-block;">
+            <input type="submit" class="btn btn-default" value="Edit" >
           </form>
-          <form method="POST" action="/urls/<%= i %>/delete">
-            <input type="submit" value="Delete">
+
+          <form method="POST" action="/urls/<%= i %>/delete" style="display:inline-block;">
+            <input type="submit" class="btn btn-default" value="Delete">
           </form>
+          <p></p>
         <% }; %>
-      </ul>
 
-
+        <p></p>
       <a href="/urls/new" class="btn btn-default" style="font-size:25px" >Tiny-ize me!</a>
     </div>
   </div>
