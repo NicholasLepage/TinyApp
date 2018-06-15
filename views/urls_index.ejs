@@ -3,19 +3,29 @@
 <head>
   <title>TinyApp</title>
 </head>
+
+<header>
+ <% include ./partials/_header %>
+</header>
+
 <body>
-  <% include ./partials/_header %>
-    <ul>
-      <% for (let i in urls) {%>
-        <li><%= i + ": " + urls[i]%></li>
-        <form method="GET" action="/urls/<%= i %>">
-          <input type="submit" value="Edit">
-        </form>
-        <form method="POST" action="/urls/<%= i %>/delete">
-          <input type="submit" value="Delete">
-        </form>
-      <% }; %>
-    </ul>
-    <a href="/urls/new">Tiny-ize me!</a>
+  <ul>
+    <% for (let i in urls) {%>
+      <li><%= i + ": " + urls[i].longURL%></li>
+      <form method="GET" action="/urls/<%= i %>">
+        <input type="submit" value="Edit">
+      </form>
+      <form method="POST" action="/urls/<%= i %>/delete">
+        <input type="submit" value="Delete">
+      </form>
+    <% }; %>
+  </ul>
+
+  <% if (userObject === undefined) { %>
+  <h3>Please login or register to start Tiny-izing websites!</h3>
+  <% }; %>
+
+  <a href="/urls/new">Tiny-ize me!</a>
+
 </body>
 </html>

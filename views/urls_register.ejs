@@ -3,8 +3,12 @@
 <head>
   <title>Register</title>
 </head>
+
+<header>
+ <% include ./partials/_header %>
+</header>
+
 <body>
-  <% include ./partials/_header %>
   <form method="POST" action="/register">
     <input type="email" name="email" placeholder="user@example.com">
     <input type="password" name="password" placeholder="Password">

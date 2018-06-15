@@ -6,22 +6,34 @@
 </head>
 
 <header>
-   <% include ./partials/_header %>
+ <% include ./partials/_header %>
 </header>
 
- <body>
-   <div>
-       <h1>Short URL: <%= shortURL %></h1>
-       <p>Shortened URL of: <%= longURL%></p>
-   </div>
+<body>
 
-   <div>
-     <h3>Edit URL</h3>
-     <form method="POST" action="/urls/<%=shortURL%>">
+  <% if ( userObject === undefined || !urls[shortURL]) { %>
+
+    <div>
+      <h3>Please login as the creator of this Tiny-ized URL.</h3>
+    </div>
+
+  <% } else { %>
+
+    <div>
+      <h1>Short URL: localhost:8080/u/<%=shortURL%></h1>
+      <p>Shortened URL of: <%= longURL%></p>
+    </div>
+
+    <div>
+      <h3>Edit URL</h3>
+      <form method="POST" action="/urls/<%=shortURL%>">
         <input type="text" name="updatedURL">
         <input type="submit" name="submitUpdate" value="Submit">
-     </form>
-   </div>
- </body>
+      </form>
+    </div>
+
+  <% }; %>
+
+</body>
 
 </html>
