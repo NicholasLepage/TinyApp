@@ -5,12 +5,18 @@ const app = express();
 const PORT = 8080;
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 
+app.use(cookieSession({
+  name: 'session',
+  keys: ["big boi with big secrets"],
 
-app.use(cookieParser());
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(express.static("views"));
 
 //Database containing every website created by the users.
 let urlDatabase = {
@@ -37,16 +43,6 @@ let users = {
   }
 };
 
-//Check if user is logged in, and if not, clear the cookies (Helpful if logged in when restarting the server)
-const isLoggedIn = (userid, res) => {
-  for (let user in users) {
-    if (users[user].id === userid) {
-      return true;
-    }
-  }
-  res.clearCookie("user_id");
-};
-
 //Creates a custom URL database for the user who is logged in
 const urlsForUser = userid => {
   userUrls = {};
@@ -62,10 +58,9 @@ const urlsForUser = userid => {
 
 //Homepage
 app.get("/urls", (req, res) => {
-  isLoggedIn(req.cookies.user_id, res); //Useful for dev. See function comment.
-  urlsForUser(req.cookies.user_id);     //Builds URL database for specific user.
+  urlsForUser(req.session.user_id);     //Builds URL database for specific user.
   let templateVars = { urls: userUrls,
-                        userObject: users[req.cookies.user_id]
+                        userObject: users[req.session.user_id]
                       };
   res.render("urls_index", templateVars);
 });
@@ -82,7 +77,7 @@ app.get("/urls.json", (req, res) => {
 
 //Loads the Register page for users to sign up
 app.get("/register", (req, res) => {
-  let templateVars = { userObject: users[req.cookies.user_id] };
+  let templateVars = { userObject: users[req.session.user_id] };
   res.render("urls_register", templateVars);
 });
 
@@ -98,13 +93,14 @@ app.post("/register", (req, res) => {
   const pass = req.body.password;
   const hashedPass = bcrypt.hashSync(pass, 10);
   console.log(hashedPass);
-  res.cookie("user_id", req.body.id);   //Creates the cookie "user_id" which will remember who is logged in.
+  req.session.user_id = req.body.id;   //Creates the cookie "user_id" which will remember who is logged in.
+
   res.redirect("/urls");
 });
 
 //Loads the Login page for users to sign in
 app.get("/login", (req, res) => {
-  let templateVars = { userObject: users[req.cookies.user_id] };
+  let templateVars = { userObject: users[req.session.user_id] };
   res.render("urls_login", templateVars);
 });
 
@@ -112,7 +108,7 @@ app.get("/login", (req, res) => {
 app.post("/login", (req,res) => {
   for (let user in users) {
     if (users[user].email === req.body.email && users[user].password === req.body.password) {
-      res.cookie("user_id", users[user].id);
+      req.session.user_id = users[user].id;
       res.redirect("/urls");
     }
   }
@@ -121,7 +117,7 @@ app.post("/login", (req,res) => {
 
 //Logs the user out by clearing the user_id cookie
 app.post("/logout", (req,res) => {
-  res.clearCookie("user_id");
+  req.session = null;
   res.redirect("/urls");
 });
 
@@ -135,10 +131,10 @@ app.post("/urls/:id/delete", (req,res) => {
 
 //Loads the page to create a new Short URL
 app.get("/urls/new", (req, res) => {
-  if (req.cookies.user_id === undefined) {  //Makes sure that you're logged in before using the service.
+  if (req.session.user_id === undefined) {  //Makes sure that you're logged in before using the service.
     res.redirect("/login");
   } else {
-    let templateVars = { userObject: users[req.cookies.user_id] };
+    let templateVars = { userObject: users[req.session.user_id] };
     res.render("urls_new", templateVars);
   }
 });
@@ -149,7 +145,7 @@ app.post("/urls", (req, res) => {
   let newShortURL = generateRandomString();
   urlDatabase[newShortURL] = {};                //Adds new URL in an object which stores both the longURL and the ID of the user who created it.
   urlDatabase[newShortURL].longURL = newLongURL;
-  urlDatabase[newShortURL].user_id = req.cookies.user_id;
+  urlDatabase[newShortURL].user_id = req.session.user_id;
   res.redirect("/urls/" + newShortURL);
 });
 
@@ -164,12 +160,12 @@ app.post("/urls/:id", (req,res) => {
 
 //Loads the page after having created a new URL
 app.get("/urls/:id", (req, res) => {
-  urlsForUser(req.cookies.user_id); //Builds custom URL database in order to check if the link is yours on the actual page.
+  urlsForUser(req.session.user_id); //Builds custom URL database in order to check if the link is yours on the actual page.
   let templateVars = {
     urls: userUrls,
     shortURL: req.params.id,
     longURL: urlDatabase[req.params.id].longURL,
-    userObject: users[req.cookies.user_id]
+    userObject: users[req.session.user_id]
   };
   res.render("urls_show", templateVars);
 });

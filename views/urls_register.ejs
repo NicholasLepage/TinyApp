@@ -9,11 +9,20 @@
 </header>
 
 <body>
-  <form method="POST" action="/register">
-    <input type="email" name="email" placeholder="user@example.com">
-    <input type="password" name="password" placeholder="Password">
-    <input type="submit" value="Create Account">
-  </form>
+
+  <div class="container text-center">
+    <div class="jumbotron">
+      <form method="POST" action="/register">
+        <p>Email:</p>
+        <input type="email" name="email" placeholder="user@example.com">
+        <p></p>
+        <p>Password: </p>
+        <input type="password" name="password" placeholder="Password">
+        <p></p>
+        <input type="submit" class="btn btn-default" style="font-size: 18px" value="Create Account">
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -9,23 +9,28 @@
 </header>
 
 <body>
-  <ul>
-    <% for (let i in urls) {%>
-      <li><%= i + ": " + urls[i].longURL%></li>
-      <form method="GET" action="/urls/<%= i %>">
-        <input type="submit" value="Edit">
-      </form>
-      <form method="POST" action="/urls/<%= i %>/delete">
-        <input type="submit" value="Delete">
-      </form>
-    <% }; %>
-  </ul>
+  <div class="container text-center">
+    <div class="jumbotron">
+      <ul>
 
-  <% if (userObject === undefined) { %>
-  <h3>Please login or register to start Tiny-izing websites!</h3>
-  <% }; %>
+        <% if (userObject === undefined) { %>
+        <h3>Please login or register to start Tiny-izing websites!</h3>
+        <% }; %>
 
-  <a href="/urls/new">Tiny-ize me!</a>
+        <% for (let i in urls) {%>
+          <li><%= i + ": " + urls[i].longURL%></li>
+          <form method="GET" action="/urls/<%= i %>">
+            <input type="submit" value="Edit">
+          </form>
+          <form method="POST" action="/urls/<%= i %>/delete">
+            <input type="submit" value="Delete">
+          </form>
+        <% }; %>
+      </ul>
 
+
+      <a href="/urls/new" class="btn btn-default" style="font-size:25px" >Tiny-ize me!</a>
+    </div>
+  </div>
 </body>
 </html>

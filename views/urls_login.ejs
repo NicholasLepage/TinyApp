@@ -9,15 +9,19 @@
 </header>
 
 <body>
-
-  <form method="POST" action="/login">
-    <input type="email" name="email" placeholder="user@example.com">
-    <input type="password" name="password" placeholder="Password">
-    <input type="submit" value="Sign In">
-  </form>
-
-</form>
-
+  <div class="container text-center">
+    <div class="jumbotron">
+      <form method="POST" action="/login">
+        <p>Email:</p>
+        <input type="email" name="email" placeholder="user@example.com">
+        <p></p>
+        <p>Password: </p>
+        <input type="password" name="password" placeholder="Password">
+        <p></p>
+        <input type="submit" class="btn btn-default" style="font-size: 25px" value="Sign In">
+      </form>
+    </div>
+  </div>
 
 </body>
 </html>
